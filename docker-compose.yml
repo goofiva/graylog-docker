@@ -1,0 +1,22 @@
+version: '2'
+services:
+  mongo:
+    image: mongo:3
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.5
+    environment:
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      http.host: "0.0.0.0"
+
+  graylog:
+    image: graylog/graylog:3.2
+    links:
+      - mongo
+      - elasticsearch
+    ports:
+      - 9000:9000
+      - 12201:12201
+      - 1514:1514
+    environment:
+      GRAYLOG_HTTP_EXTERNAL_URI: "http://127.0.0.1:9000/"
